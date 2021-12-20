@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name custom-flicker-LED)(type Legacy)(uri ${KIPRJMOD}/custom-flicker-LED.lib)(options "")(descr ""))
+)
