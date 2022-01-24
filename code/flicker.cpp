@@ -1,5 +1,5 @@
 /*
- * Ficker_t20.cpp
+ * flicker_t20.cpp
  * A port of this algorithm: https://github.com/emilyvelasco/flickery_light/blob/main/flickery_light_w_warmup.ino
  * Important datasheet: http://ww1.microchip.com/downloads/en/DeviceDoc/atmel-8235-8-bit-avr-microcontroller-attiny20_datasheet.pdf
  *
