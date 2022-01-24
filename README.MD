@@ -1,7 +1,5 @@
 # A different interpretation of "programmable LED"
 
-### Will this work? I have no idea if this will work. It's too goofy to actually work, right? ...Right?
-
 TL;DR I'm investigating if I can attach a very very small circuit to a through-hole LED to run a custom programmed pattern, similar to a candle-flicker LED.
 
 ![A 3d render of a 5mm through-hole LED with a small PCB on the underside of the lens](sideside.png)
@@ -23,18 +21,22 @@ Do programmable LEDs like this exist? Obviously the WS2812b and similar LEDs exi
 
 So can it be done? Without designing a custom IC and embedding it in a custom LED casing? I need a solution compatible with a stock LED. And that means the solution needs to exist _in parallel with the LED_. I'm envisioning a small PCB nestled underneath a 5mm through-hole LED. Soldered in place between the existing legs, no cuts or modifications to the LED itself.
 
-When it's fully on, a white LED's forward voltage is around 3.1 volts. That's enough that we could power a microcontroller in parallel with the LED! But when the LED is off, that forward voltage is 0V. But if we keep the forward voltage above roughly 1.8V, we should consistently have enough power to keep a microcontroller on without resorting to boost converters or other power management tools.
-
 What microcontroller is small enough to fit under a 5mm through-hole LED? I know of two: the WLCSP-12 ATtiny20 (1.55×1.43 mm) and the WLP-16 MAX32660 (1.55×1.57 mm). It's true that I've been meaning to get better with ARM systems, but for now I'll stick with the more familiar AVR-based ATtiny20.
 
-We can shunt current around the LED using an NPN transistor controlled by an I/O pin on the microcontroller. A Zener diode keeps the LED voltage at at least 1.8V, so the microcontroller can get power without some kind of boost circuit.
+Both those microcontrollers require at least 1.8V to operatre. A white LED drawing between 1 and 20 mA will have a forward voltage in roughly the 2.4 - 3.1 V range. That means a microcontroller in parallel can be powered while the LED is on! However, if the LED shuts off, the voltage across it drops to 0V and the microcontroller will shut off as well. To get around this, we can make the LED super dim instead of completely turned off. If we use a shunt to get the LED forward voltage into the 1.8 - 2.0 V range, the microcontroller can stay on while the LED light output is undetectable. A TLVH431 adjustable shunt lets us keep the same forward voltage, regardless of if the shunt is carrying 1 mA or 20 mA, which makes things more consistent than a Zener diode can do.
 
-So, when current is flowing through the LED, the microcontroller receives about 3.1 volts. When current isn't flowing through the LED, it receives about 1.8 V. I haven't tried, but I assume the ATtiny20 isn't designed to work with a power supply constantly pinging between these two values. A tiny LDO ensures that, no matter what the diode forward voltage, the ATtiny20 gets enough power.
+My original plan was to shunt current around the LED using a BJT driven by an I/O pin on the microcontroller. This would be paired with a Zener diode to keep the LED voltage at at least 1.8V, to ensure the microcontroller has enough power. There were some issues with this approach! For one thing, I learned that low-value Zeners have much more variation in their breakdown voltages. A diode sold as a 1.8V Zener might, at a current of 10 mA, have a breakdown voltage closer to 2.6V; this wouldn't dim the LED at all!
+
+Another issue is the transistor. I didn't realize that I could sink ~20 mA directly into these microcontrollers' GPIO pins! In fact, the ATtiny20 GPIO can source/sink 40 mA, and the MAX32660 can do 25. This means the current being diverted around the LED can go through the microcontroller, instead of an external transistor. Thank you to [cpldcpu](https://cpldcpu.wordpress.com) for pointing this out to me! I don't know what led me to think that a BGA ATtiny could handle less current than SOIC or DIP equivalents. That set off a cascade of design adjustments that led to the current very-low-component-count design.
 
 ## Putting it together
 
-This really seems plausible! [Here's a Falstad simulation that makes me optimistic.](https://tinyurl.com/yxa3gy2q) The component count is low enough that I could do it with 0402 passives and a SOT-723 transistor. The microcontroller and LDO are BGA packages, but if I'm careful I _think_ I can hand-solder the rest. They aren't suuuper-convenient sizes, but I'll do it for the sake of this goofy project.
+This seems really plausible! [Here is a tweet showing the circuit working as expected with larger versions of each part](https://twitter.com/DHammarskjold/status/1483334537580998658). The flicker animation is a port of one kindly provided by [Emily Velasco](https://twitter.com/MLE_Online), which you can obtain in the `code/` folder. According to my cheap ammeter, the microcontroller functions properly on a supply as low as 0.5 mA and as high as 20 mA, which I'm thrilled to see.
 
-The specific Zener and LDO values need to be verified experimentally; I have several values on the way for a breadboard test. And it looks like I may have to seek out a scalper to get WLCSP-12 ATtiny20 ICs. If you have any spares you could sell to me, please get in touch!
+Programming a 1.5mm IC is always a fun challenge, isn't it? My current (untested) plan is to order the PCBs nestled inside a larger PCB with pogo-pin programming pads, like so:
+
+![A 3d render of the small PCB inside a larger PCB with pads for connecting a programmer](programming.png)
+
+I should be able to reflow-solder the ATtiny20 and TLVH431, then program the microcontroller, then hand-solder the passives, then snip the board free, *then* attach the LED.
 
 In the meantime, please let me know if I've overlooked some aspect or if you have any ideas on how to change/improve this. I have a few ideas for a 5mm RGB LED, but that's a project for another time....
