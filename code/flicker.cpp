@@ -13,9 +13,8 @@
  * which will cause the system to reset. Not advised.
  *
  * Created: 1/16/2022 3:35:08 PM
- * Author : Sam
+ * Author : Sam Ettinger <ettingersam@gmail.com> https://github.com/settinger/custom-flicker-LED
  */
-
 #define F_CPU 4000000UL
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -29,11 +28,11 @@ volatile int frame = 0;                                 // Which binary-code-mod
 volatile unsigned int brightness = 0;                   // A value between 0 and 63 determining the duty cycle of the LED (0: off, 63: fully on)
 volatile unsigned char updateDelay = 0;                 // How many periods of binary code modulation have elapsed since LED brightness was last calculated
 
-volatile unsigned int randomLevel;
-volatile unsigned int lightLevel;
-volatile unsigned int cutoffValue = 127;
-volatile unsigned int bottomRandom = 2;
-volatile bool foo = false;
+volatile unsigned int randomLevel;                      // A random number to determine if LED is on or not
+volatile unsigned int lightLevel;                       // A random number that is the LED brightness
+volatile unsigned int cutoffValue = 127;                // By comparing this to a random 7-bit number we determine how likely the LED is to be on or off at a given moment.
+volatile unsigned int bottomRandom = 2;                 // The lowest acceptable brightness for the LED at this current moment
+volatile bool foo = false;                              // Slows down the speed at which cutoffValue and bottomRandom decrease/increase, respectively
 
 // Write to the 16-bit register pair OCR1A
 void setTimer1(unsigned int i) {
@@ -77,7 +76,7 @@ int getEntropy(int bits) {
 // Calculate the new brightness
 void flicker() {
 	// Pick random number to determine if light is on or off
-	randomLevel = getEntropy(6);
+	randomLevel = getEntropy(7);
 	
 	// Lower cutoff level over time to reduce flicker gradually
 	if (foo) {
@@ -89,7 +88,7 @@ void flicker() {
 	// If LED should be on, set it to the calculated brightness
 	if (randomLevel >= cutoffValue) {
 		lightLevel = getEntropy(5);
-		lightLevel = bottomRandom + (lightLevel & (63-bottomRandom));
+		lightLevel = bottomRandom + (lightLevel % (63 - bottomRandom)); //bottomRandom + (lightLevel & (63-bottomRandom)); // 
 		setBrightness(lightLevel);
 	} else {
 		setBrightness(0);
@@ -124,7 +123,7 @@ int main(void) {
 	// Enable ADC for gathering entropy -- PA4 and PA6 are not connected to anything, so probably good choices (datasheet p.121)
 	ADCSRA = 1 << ADEN | 0b011 << ADPS0; // Enable ADC, set to 500kHz
 	//ADCSRB = 1 << ADLAR; // Left-adjust ADC for faster, less accurate readings
-	ADMUX = 0b0100 << MUX0; // Connect ADC to PA4
+	ADMUX = 0b0110 << MUX0; // Connect ADC to PA6
 	
 	// Write to the 16-bit OCR1A register pair to set number of cycles before first overflow interrupt occurs (datasheet p.96)
 	setTimer1(interruptDelay);
@@ -146,6 +145,7 @@ int main(void) {
  * If LED is supposed to be OFF, write 0<<DDA2 to DDRA register.
  * Every few 3200-cycle interrupts, update brightness
  */
+
 ISR(TIM1_COMPA_vect) {
 	// Disable interrupts during this!
 	unsigned char sreg;

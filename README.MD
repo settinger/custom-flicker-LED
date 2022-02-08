@@ -6,6 +6,10 @@ TL;DR I'm investigating if I can attach a very very small circuit to a through-h
 
 ![A 3d render of a 5mm through-hole LED with a small PCB on the underside of the lens](underside.png)
 
+![A photograph of a 5mm through-hole LED with a small PCB on the underside of the lens and programming pads sticking out](irl1.jpg)
+
+![A photograph of a 5mm through-hole LED held in tweezers to expose the small PCB on the underside of the lens](irl2.jpg)
+
 ![The schematic of the aforementioned small PCB](schematic.png)
 
 
@@ -31,12 +35,16 @@ Another issue was the transistor. I didn't realize that I could sink ~20 mA dire
 
 ## Putting it together
 
-This seems really plausible! [Here is a tweet showing the circuit working as expected with larger versions of each part](https://twitter.com/DHammarskjold/status/1483334537580998658). The flicker animation is a port of one kindly provided by [Emily Velasco](https://twitter.com/MLE_Online), which you can obtain in the `code/` folder. According to my cheap ammeter, the microcontroller functions properly on a supply as low as 0.5 mA and as high as 20 mA, which I'm thrilled to see.
+![A photograph of a 5mm through-hole LED with a small PCB on the underside of the lens and programming pads sticking out](irl1.jpg)
 
-Programming a 1.5mm IC is always a fun challenge, isn't it? My current (untested) plan is to order the PCBs nestled inside a larger PCB with pogo-pin programming pads, like so:
+It's working! [Here is a video of the flicker in action](https://twitter.com/DHammarskjold/status/1483334537580998658). The flicker animation is a port of one kindly provided by [Emily Velasco](https://twitter.com/MLE_Online), which you can obtain in the `code/` folder.
+
+As you can see there is a (relatively) large PCB still attached to the LED. Those are the programming pads, so I can tweak the program on the ATtiny20 until I decide to trim off the excess parts.
 
 ![A 3d render of the small PCB inside a larger PCB with pads for connecting a programmer](programming.png)
 
-I should be able to reflow-solder the ATtiny20 and TLVH431, then program the microcontroller, then hand-solder the passives, then snip the board free, *then* attach the LED.
+There are components on both sides of the PCB. I put the ATtiny20 and TLVH431 on first, using a hot plate. Then I programmed the tiny20, and finally I hand-soldered the 0402 passives. I used a 47kΩ and a 68kΩ resistor instead of the desired 4.7kΩ and 7.5kΩ ones because that's what I had on hand.
 
-In the meantime, please let me know if I've overlooked some aspect or if you have any ideas on how to change/improve this. I have a few ideas for a 5mm RGB LED, but that's a project for another time....
+[Here is a tweet showing my protoboard circuit](https://twitter.com/DHammarskjold/status/1483334537580998658), working as expected with larger versions of each part. This helped me dial in the right resistor values and measure the range of current that kept the board functioning. According to my cheap ammeter, the microcontroller functions properly on a supply as low as 0.5 mA and as high as 20 mA, which I'm thrilled to see.
+
+Please let me know if you have some suggestions for improvements to the fluorescent-flicker animation, or if there are other programmable LED animations you'd like to see! I have a few ideas for a 5mm RGB LED, but that's a project for another time....

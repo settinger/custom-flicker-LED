@@ -843,7 +843,7 @@
     (in_bom yes) (on_board yes)
     (uuid 8a0125f6-f8f3-4dd5-b01f-4d1c5ffe7675)
     (property "Reference" "R2" (id 0) (at 161.925 86.1822 90))
-    (property "Value" "4.5kΩ" (id 1) (at 161.925 88.4936 90))
+    (property "Value" "4.7kΩ" (id 1) (at 161.925 88.4936 90))
     (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (id 2) (at 161.925 89.662 90)
       (effects (font (size 1.27 1.27)) hide)
     )
@@ -908,7 +908,7 @@
       (reference "R1") (unit 1) (value "1kΩ") (footprint "Resistor_SMD:R_0402_1005Metric")
     )
     (path "/8a0125f6-f8f3-4dd5-b01f-4d1c5ffe7675"
-      (reference "R2") (unit 1) (value "4.5kΩ") (footprint "Resistor_SMD:R_0402_1005Metric")
+      (reference "R2") (unit 1) (value "4.7kΩ") (footprint "Resistor_SMD:R_0402_1005Metric")
     )
     (path "/00000000-0000-0000-0000-00006230567c"
       (reference "R3") (unit 1) (value "7.5kΩ") (footprint "Resistor_SMD:R_0402_1005Metric")
