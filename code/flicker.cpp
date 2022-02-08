@@ -32,7 +32,7 @@ volatile unsigned int randomLevel;                      // A random number to de
 volatile unsigned int lightLevel;                       // A random number that is the LED brightness
 volatile unsigned int cutoffValue = 127;                // By comparing this to a random 7-bit number we determine how likely the LED is to be on or off at a given moment.
 volatile unsigned int bottomRandom = 2;                 // The lowest acceptable brightness for the LED at this current moment
-volatile bool foo = false;                              // Slows down the speed at which cutoffValue and bottomRandom decrease/increase, respectively
+volatile bool slowdown = false;                              // Slows down the speed at which bottomRandom increases
 
 // Write to the 16-bit register pair OCR1A
 void setTimer1(unsigned int i) {
@@ -79,24 +79,22 @@ void flicker() {
 	randomLevel = getEntropy(7);
 	
 	// Lower cutoff level over time to reduce flicker gradually
-	if (foo) {
-		if (cutoffValue > 0) {
-			cutoffValue--;
-		}
+	if (cutoffValue > 0) {
+		cutoffValue--;
 	}
 	
 	// If LED should be on, set it to the calculated brightness
 	if (randomLevel >= cutoffValue) {
 		lightLevel = getEntropy(5);
-		lightLevel = bottomRandom + (lightLevel % (63 - bottomRandom)); //bottomRandom + (lightLevel & (63-bottomRandom)); // 
+		lightLevel = bottomRandom + (lightLevel % (63 - bottomRandom));
 		setBrightness(lightLevel);
 	} else {
 		setBrightness(0);
 	}
 	
 	// Increase minimum brightness value until full brightness is achieved, but maintain some flicker
-	foo = !foo;
-	if (foo) {
+	slowdown = !slowdown;
+	if (slowdown) {
 		bottomRandom++;
 		if (bottomRandom > 50) {
 			bottomRandom = 50;
