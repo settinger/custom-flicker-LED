@@ -37,7 +37,7 @@ Another issue was the transistor. I didn't realize that I could sink ~20 mA dire
 
 ![A photograph of a 5mm through-hole LED with a small PCB on the underside of the lens and programming pads sticking out](irl1.jpg)
 
-It's working! [Here is a video of the flicker in action](https://twitter.com/DHammarskjold/status/1483334537580998658). The flicker animation is a port of one kindly provided by [Emily Velasco](https://twitter.com/MLE_Online), which you can obtain in the `code/` folder.
+It's working! [Here is a video of the flicker in action](https://twitter.com/DHammarskjold/status/1491195660074627072). The flicker animation is a port of one kindly provided by [Emily Velasco](https://twitter.com/MLE_Online), which you can obtain in the `code/` folder.
 
 As you can see there is a (relatively) large PCB still attached to the LED. Those are the programming pads, so I can tweak the program on the ATtiny20 until I decide to trim off the excess parts.
 
