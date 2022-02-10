@@ -2,13 +2,17 @@
 
 TL;DR I'm investigating if I can attach a very very small circuit to a through-hole LED to run a custom programmed pattern, similar to a candle-flicker LED.
 
+![A photograph of a 5mm through-hole LED with a small PCB just barely visible on the underside of the lens](irl3.jpg)
+
+![A photograph of a 5mm through-hole LED held in tweezers to expose the small PCB on the underside of the lens](irl4.jpg)
+
 ![A 3d render of a 5mm through-hole LED with a small PCB on the underside of the lens](sideside.png)
 
 ![A 3d render of a 5mm through-hole LED with a small PCB on the underside of the lens](underside.png)
 
 ![A photograph of a 5mm through-hole LED with a small PCB on the underside of the lens and programming pads sticking out](irl1.jpg)
 
-![A photograph of a 5mm through-hole LED held in tweezers to expose the small PCB on the underside of the lens](irl2.jpg)
+![A photograph of a 5mm through-hole LED held in tweezers to expose the small PCB on the underside of the lens, programming pins sticking out](irl2.jpg)
 
 ![The schematic of the aforementioned small PCB](schematic.png)
 
@@ -39,7 +43,7 @@ Another issue was the transistor. I didn't realize that I could sink ~20 mA dire
 
 It's working! [Here is a video of the flicker in action](https://twitter.com/DHammarskjold/status/1491195660074627072). The flicker animation is a port of one kindly provided by [Emily Velasco](https://twitter.com/MLE_Online), which you can obtain in the `code/` folder.
 
-As you can see there is a (relatively) large PCB still attached to the LED. Those are the programming pads, so I can tweak the program on the ATtiny20 until I decide to trim off the excess parts.
+[As you can see here](https://twitter.com/DHammarskjold/status/1490858013917208579), there was a (relatively) large PCB still attached to the LED. Those are the programming pads, so I can tweak the program on the ATtiny20 until I decide to trim off the excess parts.
 
 ![A 3d render of the small PCB inside a larger PCB with pads for connecting a programmer](programming.png)
 
